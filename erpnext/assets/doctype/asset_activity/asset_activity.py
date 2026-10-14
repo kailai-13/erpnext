@@ -16,6 +16,7 @@ class AssetActivity(Document):
 		from frappe.types import DF
 
 		asset: DF.Link
+		company: DF.Link
 		date: DF.Datetime
 		subject: DF.TextEditor
 		user: DF.Link
@@ -24,14 +25,18 @@ class AssetActivity(Document):
 	pass
 
 
-def add_asset_activity(asset, subject):
+def add_asset_activity(asset, subject, date=None, user=None, company=None):
+	if not company:
+		company = frappe.db.get_value("Asset", asset, "company")
+
 	frappe.get_doc(
 		{
 			"doctype": "Asset Activity",
 			"asset": asset,
 			"subject": subject,
-			"user": frappe.session.user,
-			"date": now_datetime(),
+			"date": date or now_datetime(),
+			"user": user or frappe.session.user,
+			"company": company,
 		}
 	).insert(ignore_permissions=True, ignore_links=True)
 

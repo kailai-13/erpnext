@@ -293,7 +293,7 @@ class Asset(AccountsController):
 			add_asset_activity(self.name, _("Asset created"))
 
 	def after_delete(self):
-		add_asset_activity(self.name, _("Asset deleted"))
+		add_asset_activity(self.name, _("Asset deleted"), company=self.company)
 
 	def set_purchase_doc_row_item(self):
 		if self.asset_type == "Existing Asset" or self.asset_type == "Composite Asset":
